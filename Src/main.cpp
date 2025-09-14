@@ -6,6 +6,8 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+static void configure_sysclock();
+
 int main() {
 
     configure_sysclock();
@@ -17,7 +19,7 @@ int main() {
 /**
  * Configure clock to 12 MHz fed from HSE
  */
-static void configure_sysclock() {
+inline static void configure_sysclock() {
     // Enable High Speed External Clock
     RCC->CR |= RCC_CR_HSEON;
 
