@@ -8,6 +8,7 @@
 #endif
 
 static void configure_sysclock();
+static void initialize_io();
 
 int main() {
 
@@ -17,6 +18,8 @@ int main() {
     const unsigned int f_cpu = 12000000;
     // Set baud rate with oversampling by 16, so:
     configure_logger_peripheral(f_cpu / baud_rate);
+
+    initialize_io();
 
     uart_log("device configured\n");
 
@@ -42,4 +45,22 @@ inline static void configure_sysclock() {
     // wait until clock switched
     while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSE)
         ;
+}
+
+inline static void initialize_io() {
+    // Feed clock to GPIOA
+    RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+
+    // Feed clock to system configuration controller
+    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGCOMPEN;
+
+    // configure communication input pins: PA0
+    // select source input
+    SYSCFG->EXTICR[0] = SYSCFG_EXTICR1_EXTI0_PA;
+    // enable rising trigger
+    EXTI->RTSR = EXTI_RTSR_TR0;
+    // set interrupt mask on lines
+    EXTI->IMR |= EXTI_IMR_MR0;
+    // enable interrupt
+    NVIC_EnableIRQ(EXTI0_1_IRQn);
 }
