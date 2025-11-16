@@ -2,16 +2,15 @@
 
 #include <main.hpp>
 #include <uart_logger.hpp>
+#include <io_expander.hpp>
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
 static void configure_sysclock();
-static void initialize_io();
 
 int main() {
-
     configure_sysclock();
 
     const unsigned int baud_rate = 115200;
@@ -19,9 +18,13 @@ int main() {
     // Set baud rate with oversampling by 16, so:
     configure_logger_peripheral(f_cpu / baud_rate);
 
-    initialize_io();
+
+    configure_peripheral_for_io_expander();
+    uart_log("I/O expander initialized\n");
 
     uart_log("device configured\n");
+
+    request_input_state();
 
     while (1) {
         process_buffered_logs();
@@ -47,20 +50,4 @@ inline static void configure_sysclock() {
         ;
 }
 
-inline static void initialize_io() {
-    // Feed clock to GPIOA
-    RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
 
-    // Feed clock to system configuration controller
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGCOMPEN;
-
-    // configure communication input pins: PA0
-    // select source input
-    SYSCFG->EXTICR[0] = SYSCFG_EXTICR1_EXTI0_PA;
-    // enable rising trigger
-    EXTI->RTSR = EXTI_RTSR_TR0;
-    // set interrupt mask on lines
-    EXTI->IMR |= EXTI_IMR_MR0;
-    // enable interrupt
-    NVIC_EnableIRQ(EXTI0_1_IRQn);
-}

@@ -1,3 +1,6 @@
 [submodule "uart_logger"]
 	path = uart_logger
 	url = git@github.com:ppalex7/stm32f-usart-async-logger.git
+[submodule "common"]
+	path = common
+	url = git@github.com:ppalex7/nch-lighting-control-common.git

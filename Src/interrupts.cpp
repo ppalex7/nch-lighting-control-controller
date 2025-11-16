@@ -2,14 +2,13 @@
 
 #include <interrupts.hpp>
 #include <uart_logger.hpp>
+#include <io_expander.hpp>
 
 void DMA1_CH2_3_IRQHandler() {
     on_dma_log_transfer_complete();
+    on_dma_io_expander_transfer_complete();
 }
 
 void EXTI0_1_IRQHandler() {
-    if (EXTI->PR & EXTI_PR_PR0) {
-        uart_log("IR from I/O-expander\n");
-        EXTI->PR = EXTI_PR_PR0;
-    }
+    on_exti_io_expander_request();
 }
