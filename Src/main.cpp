@@ -1,3 +1,9 @@
+#ifndef HSE_VALUE
+#error "HSE_VALUE is not defined, but required"
+#elif (HSE_VALUE != 12000000U)
+#warning "Unexpected HSE_VALUE"
+#endif
+
 #include "stm32f030x6.h"
 
 #include <main.hpp>
@@ -14,9 +20,8 @@ int main() {
     configure_sysclock();
 
     const unsigned int baud_rate = 115200;
-    const unsigned int f_cpu = 12000000;
     // Set baud rate with oversampling by 16, so:
-    configure_logger_peripheral(f_cpu / baud_rate);
+    configure_logger_peripheral(HSE_VALUE / baud_rate);
 
 
     configure_peripheral_for_io_expander();
