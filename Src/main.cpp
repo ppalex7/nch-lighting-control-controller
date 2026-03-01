@@ -7,6 +7,7 @@
 #include "stm32f030x6.h"
 
 #include <main.hpp>
+#include <systick.hpp>
 #include <uart_logger.hpp>
 #include <io_expander.hpp>
 
@@ -18,6 +19,8 @@ static void configure_sysclock();
 
 int main() {
     configure_sysclock();
+    SysTick_Config(HSE_VALUE / SYS_TICK_RATE_HZ);
+    NVIC_EnableIRQ(SysTick_IRQn);
 
     const unsigned int baud_rate = 115200;
     // Set baud rate with oversampling by 16, so:
