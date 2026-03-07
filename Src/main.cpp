@@ -15,6 +15,8 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+#define SYS_TICK_RATE_HZ  1000U
+
 static void configure_sysclock();
 
 int main() {
