@@ -4,3 +4,6 @@
 [submodule "common"]
 	path = common
 	url = git@github.com:ppalex7/nch-lighting-control-common.git
+[submodule "EncButton"]
+	path = EncButton
+	url = https://github.com/GyverLibs/EncButton.git
