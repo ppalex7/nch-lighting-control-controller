@@ -4,12 +4,13 @@
 #warning "Unexpected HSE_VALUE"
 #endif
 
-#include "stm32f030x6.h"
+#include "main.hpp"
 
-#include <main.hpp>
-#include <systick.hpp>
 #include <uart_logger.hpp>
-#include <io_expander.hpp>
+#include <stm32f030x6.h>
+
+#include "io_expander.hpp"
+#include "systick.hpp"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."

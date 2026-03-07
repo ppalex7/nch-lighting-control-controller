@@ -1,7 +1,7 @@
 #ifndef SYSTICK_HPP_
 #define SYSTICK_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 extern volatile uint32_t system_ticks;
 

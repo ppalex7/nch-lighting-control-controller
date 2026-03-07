@@ -1,8 +1,8 @@
-#include "stm32f030x6.h"
+#include "io_expander.hpp"
 
-#include <io_expander.hpp>
-#include <uart_logger.hpp>
 #include <i2c_protocol.h>
+#include <stm32f030x6.h>
+#include <uart_logger.hpp>
 
 volatile uint16_t g_expander_input;
 

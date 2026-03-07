@@ -1,6 +1,8 @@
 #ifndef IO_EXPANDER_HPP_
 #define IO_EXPANDER_HPP_
 
+#include <cstdint>
+
 // PORTD                 PORTB
 // 0 0 0 0  0 0 0 SW9    SW1 SW2 SW3 SW4  SW5 SW6 SW7 SW8
 extern volatile uint16_t g_expander_input;
