@@ -1,0 +1,11 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Attach
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 0
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: false
+AlignAfterOpenBracket: DontAlign
+IndentPPDirectives: BeforeHash
+PPIndentWidth: 2
