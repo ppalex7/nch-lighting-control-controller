@@ -1,0 +1,30 @@
+{
+    "version": 4,
+    "configurePresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/${presetName}",
+		    "toolchainFile": "${sourceDir}/cubeide-gcc.cmake",
+            "cacheVariables": {
+            }
+        },
+        {
+            "name": "Debug-base",
+            "hidden": true,
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Release-base",
+            "hidden": true,
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ]
+}

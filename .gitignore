@@ -2,5 +2,6 @@
 .project
 .settings/
 *.launch
+CMakeUserPresets.json
 Debug/
 Release/
