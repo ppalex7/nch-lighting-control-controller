@@ -1,6 +1,7 @@
 .cproject
 .project
 .settings/
+.vscode/settings.json
 *.launch
 CMakeUserPresets.json
 Debug/
