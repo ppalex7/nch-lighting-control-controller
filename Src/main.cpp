@@ -1,7 +1,7 @@
 #ifndef HSE_VALUE
-#error "HSE_VALUE is not defined, but required"
+  #error "HSE_VALUE is not defined, but required"
 #elif (HSE_VALUE != 12000000U)
-#warning "Unexpected HSE_VALUE"
+  #warning "Unexpected HSE_VALUE"
 #endif
 
 #include "main.hpp"
@@ -17,7 +17,7 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-#define SYS_TICK_RATE_HZ  1000U
+#define SYS_TICK_RATE_HZ 1000U
 
 static void configure_sysclock();
 

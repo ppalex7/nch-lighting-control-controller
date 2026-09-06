@@ -17,8 +17,8 @@ void request_input_state() {
     // enable channel
     DMA1_Channel3->CCR |= DMA_CCR_EN;
 
-    I2C1->CR2 = I2C_CR2_AUTOEND | (sizeof(g_expander_input) << I2C_CR2_NBYTES_Pos) | I2C_CR2_START | I2C_CR2_RD_WRN
-            | (IO_EXPANDER_I2C_ADDRESS << I2C_CR2_SADD_Pos);
+    I2C1->CR2 = I2C_CR2_AUTOEND | (sizeof(g_expander_input) << I2C_CR2_NBYTES_Pos) | I2C_CR2_START | I2C_CR2_RD_WRN |
+                (IO_EXPANDER_I2C_ADDRESS << I2C_CR2_SADD_Pos);
     uart_log("I2C configured to fetch input state from 0x%02X\n", IO_EXPANDER_I2C_ADDRESS);
 }
 
