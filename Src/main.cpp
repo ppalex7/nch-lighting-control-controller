@@ -6,6 +6,8 @@
 
 #include "main.hpp"
 
+#include <tuple>
+
 #include <stm32f030x6.h>
 
 #include "Lighting.hpp"
@@ -21,6 +23,20 @@
 
 static void configure_sysclock();
 
+template <typename... Ls> static void tick_all(std::tuple<Ls...> &lightings) {
+    std::apply([](auto &...l) { (l.tick(), ...); }, lightings);
+}
+
+using L1 = Lighting<PinDriver<GPIOB_BASE, 1>, 0b010000000>;
+using L2 = Lighting<PinDriver<GPIOB_BASE, 0>, 0b001000000>;
+using L3 = Lighting<PinDriver<GPIOA_BASE, 7>, 0b000100000>;
+using L4 = Lighting<PinDriver<GPIOA_BASE, 9>, 0b000010000>;
+using L5 = Lighting<PinDriver<GPIOA_BASE, 8>, 0b000001000>;
+using L6 = Lighting<PinDriver<GPIOA_BASE, 11>, 0b000000100>;
+using L7 = Lighting<PinDriver<GPIOA_BASE, 10>, 0b000000001>;
+
+static std::tuple<L1, L2, L3, L4, L5, L6, L7> lightings;
+
 int main() {
     configure_sysclock();
     SysTick_Config(HSE_VALUE / SYS_TICK_RATE_HZ);
@@ -30,6 +46,7 @@ int main() {
     // Set baud rate with oversampling by 16, so:
     configure_logger_peripheral(HSE_VALUE / baud_rate);
 
+    configure_lighting_peripheral();
 
     configure_peripheral_for_io_expander();
     uart_log("I/O expander initialized\n");
@@ -40,6 +57,7 @@ int main() {
 
     while (1) {
         process_buffered_logs();
+        tick_all(lightings);
     }
 }
 

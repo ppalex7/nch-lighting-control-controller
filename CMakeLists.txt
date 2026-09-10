@@ -107,7 +107,7 @@ set (COMMON_FLAGS  "${MCPU} ${MFPU} ${MFLOAT_ABI} ${RUNTIME_LIBRARY} -mthumb -ff
 set (WARN_FLAGS    "-Wall -Wextra -Wmissing-include-dirs -Wswitch-enum -Wconversion")
 
 set (CMAKE_C_FLAGS   "${COMMON_FLAGS} -std=gnu18 ${WARN_FLAGS}")
-set (CMAKE_CXX_FLAGS "${COMMON_FLAGS} -std=gnu++14 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -Wall -Wextra -Wmissing-include-dirs -Wconversion")
+set (CMAKE_CXX_FLAGS "${COMMON_FLAGS} -std=gnu++17 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -Wall -Wextra -Wmissing-include-dirs -Wconversion")
 set (CMAKE_ASM_FLAGS "${MCPU} ${MFPU} ${MFLOAT_ABI} -mthumb -x assembler-with-cpp")
 
 # Per-config: Debug = -Og -g3, Release = -Os -g0 (как в .cproject).
