@@ -37,10 +37,15 @@ void configure_peripheral_for_io_expander() {
     // set interrupt mask on lines
     EXTI->IMR |= EXTI_IMR_MR0;
 
-    // Configure PB6, PB7 to alternate function
-    GPIOB->MODER |= GPIO_MODER_MODER6_1 | GPIO_MODER_MODER7_1;
+    // OTYPER: output type open-drain for PB6/PB7. I2C is a wired-AND bus; in
+    // push-pull (the reset default) the master keeps driving SDA high through the
+    // ACK bit slot and fights the slave's pull-down, so a real ACK can be sampled
+    // as a NACK.
+    GPIOB->OTYPER |= GPIO_OTYPER_OT_6 | GPIO_OTYPER_OT_7;
     // Select AF1 (I2C1_SCL) for PB6, AF1 (I2C1_SDA) for PB7
     GPIOB->AFR[0] |= (0b0001 << GPIO_AFRL_AFSEL7_Pos) | (0b0001 << GPIO_AFRL_AFSEL6_Pos);
+    // Configure PB6, PB7 to alternate function
+    GPIOB->MODER |= GPIO_MODER_MODER6_1 | GPIO_MODER_MODER7_1;
 
     // Feed clock to I2C
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
