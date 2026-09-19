@@ -14,9 +14,9 @@ using L1 = Lighting<pwm::Ch1, 0b010000000, 1>;
 using L2 = Lighting<pwm::Ch2, 0b001000000, 2>;
 // Q3: TIM3_CH2, PA7, AF1, PWM1, 270°
 using L3 = Lighting<pwm::Ch3, 0b000100000, 3>;
-// Q4: TIM1_CH2, PA9, AF2, PWM2, 180°
+// Q4: TIM1_CH1, PA8, AF2, PWM2, 180°
 using L4 = Lighting<pwm::Ch4, 0b000010000, 4>;
-// Q5: TIM1_CH1, PA8, AF2, PWM1, 0°
+// Q5: TIM1_CH2, PA9, AF2, PWM1, 0°
 using L5 = Lighting<pwm::Ch5, 0b000001000, 5>;
 // Q6: TIM1_CH4, PA11, AF2, PWM2, 180°
 using L6 = Lighting<pwm::Ch6, 0b000000100, 6>;
@@ -64,11 +64,11 @@ void configure_lighting_peripheral() {
     // same force-inactive plus preload setup for channels 3 and 4.
     TIM1->CCMR2 = (pwm::forceInactive << TIM_CCMR2_OC3M_Pos) | TIM_CCMR2_OC3PE |
                   (pwm::forceInactive << TIM_CCMR2_OC4M_Pos) | TIM_CCMR2_OC4PE;
-    // compare value for channel 1 (PWM mode 1); 0 is its zero-duty value.
-    TIM1->CCR1 = 0u;
-    // compare value for channel 2 (PWM mode 2); ARR - not 0 - is the zero-duty value.
+    // compare value for channel 1 (PWM mode 2); ARR - not 0 - is the zero-duty value.
     // (because the output is active while CNT > CCR, and OCxPE defers the first CCR write to the next update event)
-    TIM1->CCR2 = pwm::autoReloadValue;
+    TIM1->CCR1 = pwm::autoReloadValue;
+    // compare value for channel 2 (PWM mode 1); 0 is its zero-duty value.
+    TIM1->CCR2 = 0u;
     // compare value for channel 3 (PWM mode 1); zero duty.
     TIM1->CCR3 = 0u;
     // compare value for channel 4 (PWM mode 2); zero duty.

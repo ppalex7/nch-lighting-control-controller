@@ -132,8 +132,8 @@ template <uint32_t TimerBase, uint32_t TimerChannel, uint32_t PwmMode> class Pwm
 using Ch1 = PwmChannel<TIM3_BASE, 4u, kOcmPwm1>;
 using Ch2 = PwmChannel<TIM3_BASE, 3u, kOcmPwm2>;
 using Ch3 = PwmChannel<TIM3_BASE, 2u, kOcmPwm1>;
-using Ch4 = PwmChannel<TIM1_BASE, 2u, kOcmPwm2>;
-using Ch5 = PwmChannel<TIM1_BASE, 1u, kOcmPwm1>;
+using Ch4 = PwmChannel<TIM1_BASE, 1u, kOcmPwm2>;
+using Ch5 = PwmChannel<TIM1_BASE, 2u, kOcmPwm1>;
 using Ch6 = PwmChannel<TIM1_BASE, 4u, kOcmPwm2>;
 using Ch7 = PwmChannel<TIM1_BASE, 3u, kOcmPwm1>;
 
