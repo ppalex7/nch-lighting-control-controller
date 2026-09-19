@@ -126,3 +126,23 @@ set (CMAKE_EXE_LINKER_FLAGS
      "-T${LINKER_SCRIPT} ${RUNTIME_LIBRARY_SYSCALLS} \
 -Wl,-Map=${PROJECT_NAME}.map -Wl,--gc-sections -static \
 -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group")
+
+set(STM32_PROGRAMMER_CLI "" CACHE FILEPATH "Path to STM32_Programmer_CLI.exe")
+
+if(NOT STM32_PROGRAMMER_CLI)
+    find_program(STM32_PROGRAMMER_CLI_FOUND STM32_Programmer_CLI STM32_Programmer_CLI.exe)
+    if(STM32_PROGRAMMER_CLI_FOUND)
+        set(STM32_PROGRAMMER_CLI ${STM32_PROGRAMMER_CLI_FOUND})
+    endif()
+endif()
+
+if(STM32_PROGRAMMER_CLI)
+    add_custom_target(flash
+        COMMAND "${STM32_PROGRAMMER_CLI}" -c port=SWD freq=4000 reset=HWrst -w "$<TARGET_FILE:${PROJECT_NAME}>" -v -rst
+        DEPENDS ${PROJECT_NAME}
+        COMMENT "Flashing ${PROJECT_NAME} via ST-Link (SWD)"
+        VERBATIM
+    )
+else()
+    message(WARNING "STM32_Programmer_CLI not found; 'flash' target unavailable. Set STM32_PROGRAMMER_CLI cache variable.")
+endif()
