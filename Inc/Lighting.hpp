@@ -15,44 +15,11 @@
 #include "uart_logger.hpp"
 
 void configure_lighting_peripheral();
+void tick_lighting();
 
-// TODO add: timer and channel
-template<uint32_t PortBase, uint8_t PinNum>
-class PinDriver {
-private:
-    static constexpr uint32_t moder_output = 0b01;
-    static constexpr uint32_t moder_af = 0b10;
-    static constexpr uint32_t moder_mask = 0b11;
-
-    inline static GPIO_TypeDef* gpio() {
-        return reinterpret_cast<GPIO_TypeDef*>(PortBase);
-    }
-
-    inline static void set_pin_mode(const uint32_t moder) {
-        gpio()->MODER = (gpio()->MODER & ~(moder_mask << PinNum * 2)) | (moder << PinNum * 2);
-    }
-
-public:
-    static void set_high() {
-        set_pin_mode(moder_output);
-        gpio()->BSRR = (0b1U << PinNum);
-
-    }
-    static void set_low() {
-        set_pin_mode(moder_output);
-        gpio()->BRR = (0b1U << PinNum);
-    }
-
-    static void set_pwm(uint16_t value) {
-        set_pin_mode(moder_af);
-        // TODO: configure timer
-    }
-};
-
-template<typename PinDriver, uint16_t expander_input_mask>
-class Lighting {
-private:
-    static constexpr uint8_t max_level = 63;
+template <typename Channel, uint16_t expander_input_mask, uint8_t log_channel> class Lighting {
+  private:
+    static constexpr uint8_t max_level = Channel::max_level;
     static constexpr uint8_t fade_step_time = 8;
 
     bool dimming_direction_up;
@@ -65,21 +32,9 @@ private:
 
     VirtButton button;
 
-    void set_output_level(uint8_t level) {
-        if (level == 0) {
-            PinDriver::set_low();
-        } else if (level >= max_level) {
-            PinDriver::set_high();
-        } else {
-            PinDriver::set_pwm(level);
-        }
-    }
-
-public:
-    Lighting() :
-            dimming_direction_up(true), current_level(0), target_level(0), saved_level(max_level), last_fade_time(0) {
-
-    }
+  public:
+    Lighting()
+        : dimming_direction_up(true), current_level(0), target_level(0), saved_level(max_level), last_fade_time(0) {}
 
     void tick() {
         if (button.tick(g_expander_input & expander_input_mask)) {
@@ -120,7 +75,11 @@ public:
                 } else {
                     current_level--;
                 }
-                set_output_level(current_level);
+                // Fading crosses level 0 and max_level, so OCxM has to be
+                // switched between force and PWM modes here as well:
+                // set_level() must stay a full mode+CCR update, not a CCR-only write.
+                Channel::set_level(current_level);
+                last_fade_time = system_ticks;
                 uart_log("fading, current_level=%d\n", current_level);
                 last_fade_time = system_ticks;
             }
