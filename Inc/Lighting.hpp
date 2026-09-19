@@ -40,7 +40,7 @@ template <typename Channel, uint16_t expander_input_mask, uint8_t log_channel> c
         if (button.tick(g_expander_input & expander_input_mask)) {
 
             if (button.click()) {
-                target_level = (current_level > 0) ? saved_level : 0;
+                target_level = (current_level > 0) ? 0 : saved_level;
                 uart_log("Button click: set target_level=%d", target_level);
             }
 
