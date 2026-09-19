@@ -45,6 +45,10 @@ void configure_peripheral_for_io_expander() {
     // Feed clock to I2C
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
 
+    // Select SYSCLK (HSE, 12 MHz) as the I2C1 kernel clock instead of the reset
+    // default HSI (8 MHz), to match the TIMINGR value computed below for 12 MHz.
+    RCC->CFGR3 |= RCC_CFGR3_I2C1SW_SYSCLK;
+
     // Timing register value is computed with STM32CubeIDE:
     // standard mode @100kHz with I2CCLK = 12Mhz, rise time = 632ns (+20ns gap), fall time = 110ns (+20ns gap)
     const uint32_t timing = 0x00A02D3Au;
