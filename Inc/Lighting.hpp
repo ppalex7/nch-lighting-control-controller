@@ -41,15 +41,14 @@ template <typename Channel, uint16_t expander_input_mask, uint8_t log_channel> c
 
             if (button.click()) {
                 target_level = (current_level > 0) ? 0 : saved_level;
-                uart_log("Button click: set target_level=%d", target_level);
+                uart_log("L%d ", log_channel);
+                uart_log("click: target=%d\n", target_level);
             }
 
             if (button.step()) {
-                uart_log("Button step: with direction_up=%d, set ", dimming_direction_up);
                 if (current_level == 0) {
                     dimming_direction_up = true;
                     current_level = 1;
-                    uart_log("enabled=1, dimming_direction_up=1, ");
                 }
 
                 if (dimming_direction_up && target_level < max_level) {
@@ -57,14 +56,16 @@ template <typename Channel, uint16_t expander_input_mask, uint8_t log_channel> c
                 } else if (!dimming_direction_up && target_level > 1) {
                     target_level--;
                 }
-                uart_log("target_level=%d\n", target_level);
 
                 saved_level = target_level;
+                uart_log("L%d ", log_channel);
+                uart_log("step: target=%d\n", target_level);
             }
 
             if (button.releaseStep()) {
                 dimming_direction_up = !dimming_direction_up;
-                uart_log("Button releaseStep: set direction_up=%d\n", dimming_direction_up);
+                uart_log("L%d ", log_channel);
+                uart_log("releaseStep: up=%d\n", dimming_direction_up);
             }
         }
 
@@ -80,8 +81,10 @@ template <typename Channel, uint16_t expander_input_mask, uint8_t log_channel> c
                 // set_level() must stay a full mode+CCR update, not a CCR-only write.
                 Channel::set_level(current_level);
                 last_fade_time = system_ticks;
-                uart_log("fading, current_level=%d\n", current_level);
-                last_fade_time = system_ticks;
+#ifdef DEBUG
+                uart_log("L%d ", log_channel);
+                uart_log("fade: %d\n", current_level);
+#endif
             }
         }
     }
