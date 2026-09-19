@@ -78,10 +78,13 @@ void on_dma_io_expander_transfer_complete() {
 
 void on_exti_io_expander_request() {
     if (EXTI->PR & EXTI_PR_PR0) {
+        // Clear the pending flag before handling the request: a rising edge that
+        // arrives while request_input_state() is running would otherwise be
+        // overwritten by this same clear at the end of the handler and lost forever.
+        EXTI->PR = EXTI_PR_PR0;
+
         uart_log("IR from I/O-expander\n");
 
         request_input_state();
-
-        EXTI->PR = EXTI_PR_PR0;
     }
 }
