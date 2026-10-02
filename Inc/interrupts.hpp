@@ -4,5 +4,6 @@
 extern "C" {
 void EXTI0_1_IRQHandler();
 void DMA1_CH2_3_IRQHandler();
+void I2C1_IRQHandler();
 }
 #endif /* INTERRUPTS_HPP_ */

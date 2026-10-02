@@ -9,7 +9,9 @@ extern volatile uint16_t g_expander_input;
 
 void request_input_state();
 void configure_peripheral_for_io_expander();
+void tick_io_expander();
 void on_dma_io_expander_transfer_complete();
+void on_i2c_io_expander_error();
 void on_exti_io_expander_request();
 
 #endif /* IO_EXPANDER_HPP_ */

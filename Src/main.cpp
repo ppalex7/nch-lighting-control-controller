@@ -41,6 +41,7 @@ int main() {
 
     while (1) {
         process_buffered_logs();
+        tick_io_expander();
         tick_lighting();
     }
 }
