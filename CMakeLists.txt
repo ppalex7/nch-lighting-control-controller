@@ -46,7 +46,7 @@ set (CMSIS_F0_PATH ""
 if (NOT CMSIS_F0_PATH)
 	message(FATAL_ERROR
 		"CMSIS_F0_PATH не задан. Укажи -DCMSIS_F0_PATH=<путь к STM32CubeF0/Drivers/CMSIS> "
-		"или создай CMakeUserPresets.json (см. CLAUDE.md).")
+		"или создай CMakeUserPresets.json (см. AGENTS.md).")
 endif ()
 
 # --- Исходники -------------------------------------------------------
@@ -94,6 +94,24 @@ if (${PROJECT_TYPE} MATCHES ${PROJECT_TYPE_EXECUTABLE})
 elseif (${PROJECT_TYPE} MATCHES ${PROJECT_TYPE_STATIC_LIBRARY})
   add_library(${PROJECT_NAME} ${PROJECT_SOURCES})
 endif()
+
+# Refresh the Git revision on every build, including builds requested by flash.
+find_package(Git REQUIRED)
+
+set(VERSION_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+add_custom_target(generate_fw_version
+    COMMAND "${CMAKE_COMMAND}"
+        "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}"
+        "-DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+        "-DOUTPUT_DIR=${VERSION_DIR}"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateVersion.cmake"
+    BYPRODUCTS "${VERSION_DIR}/build_version.hpp"
+    VERBATIM
+)
+
+add_dependencies(${PROJECT_NAME} generate_fw_version)
+target_include_directories(${PROJECT_NAME} PRIVATE "${VERSION_DIR}")
 
 add_compile_definitions (${PROJECT_DEFINES})
 add_compile_definitions ($<$<CONFIG:Debug>:DEBUG>)   # DEBUG только в Debug

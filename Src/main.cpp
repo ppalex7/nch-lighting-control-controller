@@ -9,6 +9,7 @@
 #include <stm32f030x6.h>
 
 #include "Lighting.hpp"
+#include "build_version.hpp"
 #include "io_expander.hpp"
 #include "systick.hpp"
 #include "uart_logger.hpp"
@@ -29,6 +30,7 @@ int main() {
     const unsigned int baud_rate = 115200;
     // Set baud rate with oversampling by 16, so:
     configure_logger_peripheral(HSE_VALUE / baud_rate);
+    uart_log("Firmware: " FW_REVISION "\n");
 
     configure_lighting_peripheral();
 
