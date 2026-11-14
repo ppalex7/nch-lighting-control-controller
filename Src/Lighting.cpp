@@ -56,7 +56,7 @@ void configure_lighting_peripheral() {
     // Set auto-reload value; in center-aligned mode one full period is 2 * ARR counter clocks.
     TIM1->ARR = pwm::autoReloadValue;
     // Repetition counter; 0 means every counter overflow/underflow raises an update event.
-    TIM1->RCR = 0u;
+    TIM1->RCR = pwm::repetitionCounter;
     // Force OCxREF inactive on channels 1 and 2, and enable the CCR preload.
     // Force mode holds the outputs low regardless of CNT, which is what keeps the lamps initial off.
     TIM1->CCMR1 = (pwm::forceInactive << TIM_CCMR1_OC1M_Pos) | TIM_CCMR1_OC1PE |
