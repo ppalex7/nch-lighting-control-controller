@@ -5,8 +5,21 @@
 # usage:
 #   cmake --preset Debug     &&  cmake --build --preset Debug
 #   cmake --preset Release   &&  cmake --build --preset Release
+#   cmake --preset Host      &&  cmake --build --preset Host
 #############################################################################################################################
 cmake_minimum_required(VERSION 3.20)
+
+include(cmake/ClockConfig.cmake)
+
+option(PWM_REPORT_ONLY "Build the native PWM report without the firmware toolchain or CMSIS" OFF)
+if(PWM_REPORT_ONLY)
+    project(nch-lighting-pwm-report LANGUAGES CXX)
+    if(CMAKE_CROSSCOMPILING)
+        message(FATAL_ERROR "PWM_REPORT_ONLY requires a native compiler. Use the Host preset in a fresh build directory.")
+    endif()
+    add_subdirectory(tools)
+    return()
+endif()
 
 ###################### CONSTANTS ######################################
 set (PROJECT_TYPE_EXECUTABLE          "exe")
@@ -66,7 +79,7 @@ list (FILTER PROJECT_SOURCES EXCLUDE REGEX "sysmem\\.c$")
 
 set (PROJECT_DEFINES
 	BUFFER_MESSAGES_COUNT=32
-	HSE_VALUE=12000000U
+	HSE_VALUE=${HSE_VALUE}
 	STM32
 	STM32F0
 	STM32F030C6Tx
@@ -84,6 +97,20 @@ set (PROJECT_INCLUDES
 
 ################## PROJECT SETUP ######################################
 project(${PROJECT_NAME} C CXX ASM)
+
+# A separate CMake build selects the computer's compiler, independently of the
+# ARM toolchain and the firmware's flags, includes and executable suffix.
+add_custom_target(pwm-report
+    COMMAND "${CMAKE_COMMAND}" -S "${CMAKE_CURRENT_SOURCE_DIR}/tools"
+            -B "${CMAKE_CURRENT_BINARY_DIR}/pwm-report-host"
+            -G "${CMAKE_GENERATOR}" "-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}"
+            "-DHSE_VALUE=${HSE_VALUE}" -DCMAKE_BUILD_TYPE=Release
+    COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_CURRENT_BINARY_DIR}/pwm-report-host"
+            --config Release --target pwm-report
+    COMMENT "Building and running the native PWM report"
+    USES_TERMINAL
+    VERBATIM
+)
 
 if (${PROJECT_TYPE} MATCHES ${PROJECT_TYPE_EXECUTABLE})
   add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

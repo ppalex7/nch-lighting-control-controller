@@ -6,9 +6,8 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/${presetName}",
-		    "toolchainFile": "${sourceDir}/cubeide-gcc.cmake",
-            "cacheVariables": {
-            }
+            "toolchainFile": "${sourceDir}/cubeide-gcc.cmake",
+            "cacheVariables": {}
         },
         {
             "name": "Debug-base",
@@ -25,6 +24,25 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
+        },
+        {
+            "name": "Host",
+            "displayName": "Native PWM report",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/Host",
+            "cacheVariables": {
+                "PWM_REPORT_ONLY": true,
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Host",
+            "configurePreset": "Host",
+            "targets": [
+                "pwm-report"
+            ]
         }
     ]
 }
