@@ -48,7 +48,6 @@ template <typename Channel, uint16_t expander_input_mask, uint8_t log_channel> c
             if (button.step()) {
                 if (current_level == 0) {
                     dimming_direction_up = true;
-                    current_level = 1;
                 }
 
                 if (dimming_direction_up && target_level < max_level) {
