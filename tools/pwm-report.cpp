@@ -31,9 +31,10 @@ int main() {
               << pwm::phaseShiftTicks * tickUs << " us / "
               << 360.0 * pwm::phaseShiftTicks / pwm::periodTicks << " deg\n"
               << "Brightness levels: " << pwm::brightnessLevelCount << " (0.." << static_cast<unsigned>(pwm::maxLevel)
-              << "), linear duty, rounded to the nearest compare tick\n"
-              << "Duty resolution: " << 100.0 / pwm::autoReloadValue << " % per compare tick\n"
-              << "Nominal brightness step: " << 100.0 / pwm::maxLevel << " %\n\n"
+              << "), gamma 2.2, rounded to the nearest compare tick with duplicates removed\n"
+              << "Source samples: round(ARR * (i / " << pwm::gammaSampleCount - 1u << ")^2.2), i=0.."
+              << pwm::gammaSampleCount - 1u << '\n'
+              << "Duty resolution: " << 100.0 / pwm::autoReloadValue << " % per compare tick\n\n"
               << "Outputs are active high. CCR preload is enabled.\n"
               << "Duty ticks are half the active ticks in a full up/down period.\n"
               << "At level 0 / max the output is forced inactive / active; CCR is not written.\n"
