@@ -75,9 +75,7 @@ template <typename Channel, uint16_t expander_input_mask, uint8_t log_channel> c
                 } else {
                     current_level--;
                 }
-                // Fading crosses level 0 and max_level, so OCxM has to be
-                // switched between force and PWM modes here as well:
-                // set_level() must stay a full mode+CCR update, not a CCR-only write.
+                // Fading crosses level 0, where set_level() switches between forced inactive and PWM.
                 Channel::set_level(current_level);
                 last_fade_time = system_ticks;
 #ifdef DEBUG

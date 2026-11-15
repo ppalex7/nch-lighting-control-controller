@@ -34,12 +34,8 @@ template <uint32_t TimerBase, uint32_t TimerChannel, uint32_t PwmMode> class Pwm
             return;
         }
 
-        if (level >= max_level) {
-            write_mode(forceActive);
-            return;
-        }
-
-        ccr() = ccr_ticks(level);
+        const auto clampedLevel = level > max_level ? max_level : level;
+        ccr() = ccr_ticks(clampedLevel);
         write_mode(PwmMode);
     }
 
